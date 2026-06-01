@@ -42,28 +42,27 @@ const theme = createTheme({
 });
 
 // ── Mock data (replace GET /api/inventory with real fetch) ─────────────────
-const MOCK_ITEMS = [
-  { id: 1,  name: "Organic Whole Milk",    sku: "DAIRY-001", category: "Dairy",   qty: 42,  unit: "gallon", price: 5.49,  status: "In Stock"    },
-  { id: 2,  name: "Sourdough Bread",       sku: "BAKE-014",  category: "Bakery",  qty: 8,   unit: "loaf",   price: 4.99,  status: "Low Stock"   },
-  { id: 3,  name: "Free Range Eggs",       sku: "DAIRY-005", category: "Dairy",   qty: 0,   unit: "dozen",  price: 6.29,  status: "Out of Stock"},
-  { id: 4,  name: "Atlantic Salmon",       sku: "MEAT-022",  category: "Meat",    qty: 17,  unit: "lb",     price: 12.99, status: "In Stock"    },
-  { id: 5,  name: "Roma Tomatoes",         sku: "PROD-008",  category: "Produce", qty: 134, unit: "lb",     price: 1.29,  status: "In Stock"    },
-  { id: 6,  name: "Greek Yogurt",          sku: "DAIRY-010", category: "Dairy",   qty: 55,  unit: "cup",    price: 2.49,  status: "In Stock"    },
-  { id: 7,  name: "Chicken Breast",        sku: "MEAT-003",  category: "Meat",    qty: 6,   unit: "lb",     price: 8.49,  status: "Low Stock"   },
-  { id: 8,  name: "Basmati Rice",          sku: "GRAIN-011", category: "Grains",  qty: 72,  unit: "bag",    price: 3.99,  status: "In Stock"    },
-  { id: 9,  name: "Baby Spinach",          sku: "PROD-019",  category: "Produce", qty: 29,  unit: "bag",    price: 3.49,  status: "In Stock"    },
-  { id: 10, name: "Cheddar Cheese",        sku: "DAIRY-018", category: "Dairy",   qty: 3,   unit: "block",  price: 7.99,  status: "Low Stock"   },
-  { id: 11, name: "Whole Wheat Pasta",     sku: "GRAIN-007", category: "Grains",  qty: 98,  unit: "box",    price: 2.29,  status: "In Stock"    },
-  { id: 12, name: "Ground Beef 80/20",     sku: "MEAT-009",  category: "Meat",    qty: 0,   unit: "lb",     price: 6.99,  status: "Out of Stock"},
-  { id: 13, name: "Russet Potatoes",       sku: "PROD-003",  category: "Produce", qty: 200, unit: "lb",     price: 0.89,  status: "In Stock"    },
-  { id: 14, name: "Brioche Buns",          sku: "BAKE-022",  category: "Bakery",  qty: 12,  unit: "pack",   price: 3.79,  status: "In Stock"    },
-];
+// const MOCK_ITEMS = [
+//   { id: 1,  name: "Organic Whole Milk",    sku: "DAIRY-001", category: "Dairy",   qty: 42,  unit: "gallon", price: 5.49,  status: "In Stock"    },
+//   { id: 2,  name: "Sourdough Bread",       sku: "BAKE-014",  category: "Bakery",  qty: 8,   unit: "loaf",   price: 4.99,  status: "Low Stock"   },
+//   { id: 3,  name: "Free Range Eggs",       sku: "DAIRY-005", category: "Dairy",   qty: 0,   unit: "dozen",  price: 6.29,  status: "Out of Stock"},
+//   { id: 4,  name: "Atlantic Salmon",       sku: "MEAT-022",  category: "Meat",    qty: 17,  unit: "lb",     price: 12.99, status: "In Stock"    },
+//   { id: 5,  name: "Roma Tomatoes",         sku: "PROD-008",  category: "Produce", qty: 134, unit: "lb",     price: 1.29,  status: "In Stock"    },
+//   { id: 6,  name: "Greek Yogurt",          sku: "DAIRY-010", category: "Dairy",   qty: 55,  unit: "cup",    price: 2.49,  status: "In Stock"    },
+//   { id: 7,  name: "Chicken Breast",        sku: "MEAT-003",  category: "Meat",    qty: 6,   unit: "lb",     price: 8.49,  status: "Low Stock"   },
+//   { id: 8,  name: "Basmati Rice",          sku: "GRAIN-011", category: "Grains",  qty: 72,  unit: "bag",    price: 3.99,  status: "In Stock"    },
+//   { id: 9,  name: "Baby Spinach",          sku: "PROD-019",  category: "Produce", qty: 29,  unit: "bag",    price: 3.49,  status: "In Stock"    },
+//   { id: 10, name: "Cheddar Cheese",        sku: "DAIRY-018", category: "Dairy",   qty: 3,   unit: "block",  price: 7.99,  status: "Low Stock"   },
+//   { id: 11, name: "Whole Wheat Pasta",     sku: "GRAIN-007", category: "Grains",  qty: 98,  unit: "box",    price: 2.29,  status: "In Stock"    },
+//   { id: 12, name: "Ground Beef 80/20",     sku: "MEAT-009",  category: "Meat",    qty: 0,   unit: "lb",     price: 6.99,  status: "Out of Stock"},
+//   { id: 13, name: "Russet Potatoes",       sku: "PROD-003",  category: "Produce", qty: 200, unit: "lb",     price: 0.89,  status: "In Stock"    },
+//   { id: 14, name: "Brioche Buns",          sku: "BAKE-022",  category: "Bakery",  qty: 12,  unit: "pack",   price: 3.79,  status: "In Stock"    },
+// ];
 
-const CATEGORIES  = ["All", "Dairy", "Bakery", "Meat", "Produce", "Grains"];
-const STATUS_OPTS = ["All", "In Stock", "Low Stock", "Out of Stock"];
+const CATEGORIES = ["All", "Poultry", "Red Meat", "Seafood", "Game Meat"];
 
-const statusColor = (s) =>
-  s === "In Stock" ? "success" : s === "Low Stock" ? "warning" : "error";
+// const statusColor = (s) =>
+//   s === "In Stock" ? "success" : s === "Low Stock" ? "warning" : "error";
 
 // ── Inventory Page ─────────────────────────────────────────────────────────
 function InventoryPage({ onBack }) {
@@ -71,7 +70,7 @@ function InventoryPage({ onBack }) {
   const [loading,   setLoading]  = useState(true);
   const [search,    setSearch]   = useState("");
   const [category,  setCategory] = useState("All");
-  const [status,    setStatus]   = useState("All");
+  // const [status,    setStatus]   = useState("All"); status isn't being used anymore since backend doesn't contain status 
 
   useEffect(() => {
     // Replace with: fetch("https://your-api/api/inventory").then(r => r.json()).then(setItems)
@@ -82,10 +81,10 @@ function InventoryPage({ onBack }) {
 
   const filtered = useMemo(() => items.filter(item => {
     const q = search.toLowerCase();
-    const matchSearch   = !q || item.name.toLowerCase().includes(q) || item.sku.toLowerCase().includes(q);
-    const matchCategory = category === "All" || item.category === category;
-    const matchStatus   = status   === "All" || item.status   === status;
-    return matchSearch && matchCategory && matchStatus;
+    const matchSearch   = !q || item.name.toLowerCase().includes(q) /*|| item.sku.toLowerCase().includes(q)*/;
+    const matchCategory = category === "All" || item.meat_type === category;
+    // const matchStatus   = status   === "All" || item.status   === status;
+    return matchSearch && matchCategory /*&& matchStatus*/;
   }), [items, search, category, status]);
 
   return (
@@ -126,12 +125,12 @@ function InventoryPage({ onBack }) {
               {CATEGORIES.map(c => <MenuItem key={c} value={c}>{c}</MenuItem>)}
             </Select>
           </FormControl>
-          <FormControl size="small" sx={{ minWidth: 150 }}>
+          {/* <FormControl size="small" sx={{ minWidth: 150 }}>
             <InputLabel>Status</InputLabel>
             <Select value={status} label="Status" onChange={e => setStatus(e.target.value)}>
               {STATUS_OPTS.map(s => <MenuItem key={s} value={s}>{s}</MenuItem>)}
             </Select>
-          </FormControl>
+          </FormControl> */}
         </Paper>
 
         {/* Table */}
@@ -140,12 +139,9 @@ function InventoryPage({ onBack }) {
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
-                <TableCell>SKU</TableCell>
-                <TableCell>Category</TableCell>
-                <TableCell align="right">Qty</TableCell>
-                <TableCell>Unit</TableCell>
-                <TableCell align="right">Price</TableCell>
-                <TableCell>Status</TableCell>
+                <TableCell>Meat Type</TableCell>
+                <TableCell align="right">Count</TableCell>
+                <TableCell align="right">Price Per Ounce</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -171,14 +167,9 @@ function InventoryPage({ onBack }) {
                   }}
                 >
                   <TableCell sx={{ fontWeight: 500 }}>{item.name}</TableCell>
-                  <TableCell sx={{ fontFamily: "monospace", fontSize: "0.8rem", color: "text.secondary" }}>{item.sku}</TableCell>
-                  <TableCell>{item.category}</TableCell>
-                  <TableCell align="right">{item.qty}</TableCell>
-                  <TableCell sx={{ color: "text.secondary" }}>{item.unit}</TableCell>
-                  <TableCell align="right">${item.price.toFixed(2)}</TableCell>
-                  <TableCell>
-                    <Chip label={item.status} size="small" color={statusColor(item.status)} variant="outlined" />
-                  </TableCell>
+                  <TableCell>{item.meat_type}</TableCell>
+                  <TableCell align="right">{item.count}</TableCell>
+                  <TableCell align="right">${item.price_per_oz.toFixed(2)}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
