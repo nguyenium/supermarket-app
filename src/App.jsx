@@ -75,8 +75,9 @@ function InventoryPage({ onBack }) {
 
   useEffect(() => {
     // Replace with: fetch("https://your-api/api/inventory").then(r => r.json()).then(setItems)
-    const timer = setTimeout(() => { setItems(MOCK_ITEMS); setLoading(false); }, 900);
-    return () => clearTimeout(timer);
+    // const timer = setTimeout(() => { setItems(MOCK_ITEMS); setLoading(false); }, 900);
+    // return () => clearTimeout(timer);
+    fetch("http://127.0.0.1:5000/meats?limit=20").then(r => r.json()).then(setItems).then(() => setLoading(false))
   }, []);
 
   const filtered = useMemo(() => items.filter(item => {
