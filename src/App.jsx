@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import {
-  Box, Typography, Grid, Card, CardActionArea, CardContent,
+  Box, Button, Typography, Grid, Card, CardActionArea, CardContent,
   Container, AppBar, Toolbar, IconButton, Table, TableBody,
   TableCell, TableContainer, TableHead, TableRow, Paper,
   TextField, MenuItem, Select, FormControl, InputLabel,
@@ -70,6 +70,10 @@ function InventoryPage({ onBack }) {
   const [loading,   setLoading]  = useState(true);
   const [search,    setSearch]   = useState("");
   const [category,  setCategory] = useState("All");
+  const [newName, setNewName] = useState("");
+  const [newCount, setNewCount] = useState("");
+  const [newMeatType, setNewMeatType] = useState("");
+  const [newPrice, setNewPrice] = useState("");
   // const [status,    setStatus]   = useState("All"); status isn't being used anymore since backend doesn't contain status 
 
   useEffect(() => {
@@ -85,7 +89,33 @@ function InventoryPage({ onBack }) {
     const matchCategory = category === "All" || item.meat_type === category;
     // const matchStatus   = status   === "All" || item.status   === status;
     return matchSearch && matchCategory /*&& matchStatus*/;
-  }), [items, search, category, status]);
+  }), [items, search, category]);
+
+  const handleAdd = () => {
+    if(!newName || !newCount || !newMeatType || !newPrice) {
+      return;
+    }
+
+    const duplicate = items.some(meat => meat.name.toLowerCase() == newName.toLowerCase())
+    if(duplicate) {
+      return;
+    }
+
+    const newMeat = {
+      name: newName.charAt(0).toUpperCase() + newName.slice(1),
+      count: newCount,
+      meat_type: newMeatType,
+      price_per_oz: parseFloat(newPrice)
+    }
+
+    fetch("http://127.0.0.1:5000/meats", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newMeat)
+    }).then(r => r.json()).then(setItems).then(() => setLoading(false))
+  }
 
   return (
     <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
@@ -108,6 +138,44 @@ function InventoryPage({ onBack }) {
         <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
           {loading ? "Loading…" : `${filtered.length} of ${items.length} items`}
         </Typography>
+
+        <div>
+          <Typography variant="h6" sx={{ mb: 0.5 }}>Add Meat</Typography>
+          <div style={{ padding: '20px' }}>
+            <TextField
+              placeholder="Enter Name"
+              size="small"
+              onChange={e => setNewName(e.target.value)}
+            />
+            <TextField
+              placeholder="Enter count"
+              size="small"
+              onChange={e => setNewCount(e.target.value)}
+            />
+            <FormControl size="small" sx={{ minWidth: 200 }}>
+              <InputLabel>Category</InputLabel>
+              <Select
+                value={newMeatType}
+                label="Category"
+                onChange={e => setNewMeatType(e.target.value)}
+              >
+                {CATEGORIES.map(c => <MenuItem key={c} value={c}> {c} </MenuItem> )}
+              </Select>
+            </FormControl>
+            <TextField
+              placeholder="Enter Price"
+              size="small"
+              onChange={e => setNewPrice(e.target.value)}
+            />
+            <Button 
+            variant="contained" 
+            style={{marginLeft: '10px'}}
+            onClick={handleAdd}
+            > 
+            ADD 
+            </Button>
+          </div>
+        </div>
 
         {/* Filters */}
         <Paper elevation={0} sx={{ p: 2, mb: 3, border: "1px solid #dde2ee", borderRadius: 2, display: "flex", gap: 2, flexWrap: "wrap", alignItems: "center" }}>
