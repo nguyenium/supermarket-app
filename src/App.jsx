@@ -74,6 +74,7 @@ function InventoryPage({ onBack }) {
   const [newCount, setNewCount] = useState("");
   const [newMeatType, setNewMeatType] = useState("");
   const [newPrice, setNewPrice] = useState("");
+  const [editItem, setEditItem] = useState(null)
   // const [status,    setStatus]   = useState("All"); status isn't being used anymore since backend doesn't contain status 
 
   useEffect(() => {
@@ -156,6 +157,7 @@ function InventoryPage({ onBack }) {
             <TextField
               placeholder="Enter count"
               size="small"
+              sx={{paddingRight: '5px', paddingLeft: '5px'}}
               onChange={e => setNewCount(e.target.value)}
             />
             <FormControl size="small" sx={{ minWidth: 200 }}>
@@ -171,11 +173,12 @@ function InventoryPage({ onBack }) {
             <TextField
               placeholder="Enter Price"
               size="small"
+              sx={{paddingLeft:'5px'}}
               onChange={e => setNewPrice(e.target.value)}
             />
             <Button 
             variant="contained" 
-            style={{marginLeft: '10px'}}
+            sx={{marginLeft: '10px'}}
             onClick={handleAdd}
             > 
             ADD 
@@ -216,7 +219,7 @@ function InventoryPage({ onBack }) {
                 <TableCell>Meat Type</TableCell>
                 <TableCell align="right">Count</TableCell>
                 <TableCell align="right">Price Per Ounce</TableCell>
-                <TableCell></TableCell>
+                <TableCell align="right"></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -254,6 +257,13 @@ function InventoryPage({ onBack }) {
                     variant="contained" 
                     onClick={() => handleDelete(item.name)}> 
                       Delete 
+                    </Button>
+                    <Button 
+                    variant="contained"
+                    onClick={handleAdd}
+                    sx={{marginLeft: '10px'}}
+                    >
+                      UPDATE
                     </Button>
                   </TableCell>
                 </TableRow>
