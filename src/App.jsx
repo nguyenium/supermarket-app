@@ -117,6 +117,12 @@ function InventoryPage({ onBack }) {
     }).then(r => r.json()).then(setItems).then(() => setLoading(false))
   }
 
+  function handleDelete(name) {
+    fetch(`http://127.0.0.1:5000/meats/${name}`, {
+      method: 'DELETE'
+    }).then(() => setItems(items.filter(item => item.name != name)))
+  }
+
   return (
     <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
       <AppBar position="static" elevation={0} sx={{ borderBottom: "1px solid #dde2ee" }}>
@@ -180,7 +186,7 @@ function InventoryPage({ onBack }) {
         {/* Filters */}
         <Paper elevation={0} sx={{ p: 2, mb: 3, border: "1px solid #dde2ee", borderRadius: 2, display: "flex", gap: 2, flexWrap: "wrap", alignItems: "center" }}>
           <TextField
-            placeholder="Search name or SKU…"
+            placeholder="Search name..."
             size="small"
             value={search}
             onChange={e => setSearch(e.target.value)}
@@ -210,6 +216,7 @@ function InventoryPage({ onBack }) {
                 <TableCell>Meat Type</TableCell>
                 <TableCell align="right">Count</TableCell>
                 <TableCell align="right">Price Per Ounce</TableCell>
+                <TableCell></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -238,6 +245,17 @@ function InventoryPage({ onBack }) {
                   <TableCell>{item.meat_type}</TableCell>
                   <TableCell align="right">{item.count}</TableCell>
                   <TableCell align="right">${item.price_per_oz.toFixed(2)}</TableCell>
+                  <TableCell align="right"> 
+                    <Button 
+                    sx={{
+                      bgcolor: 'darkred',
+                      '&:hover': {bgcolor: '#5c0000'}
+                    }} 
+                    variant="contained" 
+                    onClick={() => handleDelete(item.name)}> 
+                      Delete 
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
