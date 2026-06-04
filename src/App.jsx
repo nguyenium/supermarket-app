@@ -10,7 +10,8 @@ import {
 import {
   Inventory2Outlined, BarChartOutlined, PeopleOutlined,
   SettingsOutlined, ArrowBackOutlined, SearchOutlined,
-  StorefrontOutlined
+  StorefrontOutlined,
+  Save
 } from "@mui/icons-material";
 
 // ── Theme ──────────────────────────────────────────────────────────────────
@@ -74,7 +75,11 @@ function InventoryPage({ onBack }) {
   const [newCount, setNewCount] = useState("");
   const [newMeatType, setNewMeatType] = useState("");
   const [newPrice, setNewPrice] = useState("");
-  const [editItem, setEditItem] = useState(null)
+  const [editItem, setEditItem] = useState({})
+  const [editName, setEditName] = useState("")
+  const [editCount, setEditCount] = useState("")
+  const [editMeatType, setEditMeatType] = useState("All")
+  const [editPrice, setEditPrice] = useState("")
   // const [status,    setStatus]   = useState("All"); status isn't being used anymore since backend doesn't contain status 
 
   useEffect(() => {
@@ -122,6 +127,35 @@ function InventoryPage({ onBack }) {
     fetch(`http://127.0.0.1:5000/meats/${name}`, {
       method: 'DELETE'
     }).then(() => setItems(items.filter(item => item.name != name)))
+  }
+
+  function handleUpdate(item) {
+    setEditItem(item)
+    setEditName(item.name)
+    setEditCount(item.count)
+    setEditMeatType(item.meat_type)
+    setEditPrice(item.price_per_oz.toFixed(2))
+  }
+
+  function handleSave() {
+    const duplicate = items.some(meat => meat.name.toLowerCase() == editName.toLowerCase())
+    if(duplicate && editItem.name.toLowerCase() != editName.toLowerCase()) {
+      return;
+    }
+
+    const editMeat = {
+      name: editName.charAt(0).toUpperCase() + editName.slice(1),
+      count: editCount,
+      meat_type: editMeatType,
+      price_per_oz: parseFloat(editPrice)
+    }
+    fetch(`http://127.0.0.1:5000/meats/${editItem.name}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(editMeat)
+    }).then(() => setItems(items.map(meat => editItem.name === meat.name ? editMeat : meat))).then(() => setEditItem({})).then(() => setLoading(false))
   }
 
   return (
@@ -244,10 +278,27 @@ function InventoryPage({ onBack }) {
                     transition: "background 0.15s"
                   }}
                 >
-                  <TableCell sx={{ fontWeight: 500 }}>{item.name}</TableCell>
-                  <TableCell>{item.meat_type}</TableCell>
-                  <TableCell align="right">{item.count}</TableCell>
-                  <TableCell align="right">${item.price_per_oz.toFixed(2)}</TableCell>
+                  <TableCell sx={{ fontWeight: 500 }}>
+                    {editItem.name === item.name ? <TextField size="small" value={editName} onChange={e => setEditName(e.target.value)} /> : item.name}
+                    </TableCell>
+                  <TableCell>
+                    {editItem.name === item.name ? 
+                    <FormControl>
+                      <InputLabel> Category</InputLabel>
+                      <Select
+                      value={editMeatType}
+                      label="Category"
+                      onChange={e => setEditMeatType(e.target.value)}>
+                        {CATEGORIES.map(c => <MenuItem key={c} value={c}> {c} </MenuItem>)}
+                      </Select>
+                    </FormControl> : item.meat_type}
+                    </TableCell>
+                  <TableCell align="right">
+                    {editItem.name === item.name ? <TextField size='small' value={editCount} onChange={e => setEditCount(e.target.value)} /> : item.count}
+                    </TableCell>
+                  <TableCell align="right">
+                    {editItem.name === item.name ? <TextField size='small' value={editPrice} onChange={e => setEditPrice(e.target.value)} /> : `$${item.price_per_oz.toFixed(2)}`}
+                    </TableCell>
                   <TableCell align="right"> 
                     <Button 
                     sx={{
@@ -260,10 +311,10 @@ function InventoryPage({ onBack }) {
                     </Button>
                     <Button 
                     variant="contained"
-                    onClick={handleAdd}
+                    onClick={editItem.name === item.name ? () => handleSave() : () => handleUpdate(item)}
                     sx={{marginLeft: '10px'}}
                     >
-                      UPDATE
+                      {editItem?.name === item.name ? 'SAVE' : 'UPDATE'}
                     </Button>
                   </TableCell>
                 </TableRow>
