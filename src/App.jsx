@@ -14,6 +14,8 @@ import {
   Save
 } from "@mui/icons-material";
 
+import {serverUrl} from './Constants';
+
 // ── Theme ──────────────────────────────────────────────────────────────────
 const theme = createTheme({
   palette: {
@@ -82,11 +84,21 @@ function InventoryPage({ onBack }) {
   const [editPrice, setEditPrice] = useState("")
   // const [status,    setStatus]   = useState("All"); status isn't being used anymore since backend doesn't contain status 
 
+  async function handleData(response) {
+    const data = await response.json()
+    setItems(data)
+    setLoading(false)
+  }
+
   useEffect(() => {
     // Replace with: fetch("https://your-api/api/inventory").then(r => r.json()).then(setItems)
     // const timer = setTimeout(() => { setItems(MOCK_ITEMS); setLoading(false); }, 900);
     // return () => clearTimeout(timer);
-    fetch("http://127.0.0.1:5000/meats?limit=20").then(r => r.json()).then(setItems).then(() => setLoading(false))
+    async function fetchData() {
+      const response = await fetch(`${serverUrl}/meats`)
+      await handleData(response)
+    }
+    fetchData()
   }, []);
 
   const filtered = useMemo(() => items.filter(item => {
@@ -97,7 +109,7 @@ function InventoryPage({ onBack }) {
     return matchSearch && matchCategory /*&& matchStatus*/;
   }), [items, search, category]);
 
-  const handleAdd = () => {
+   const handleAdd = async () => {
     if(!newName || !newCount || !newMeatType || !newPrice) {
       return;
     }
@@ -114,19 +126,21 @@ function InventoryPage({ onBack }) {
       price_per_oz: parseFloat(newPrice)
     }
 
-    fetch("http://127.0.0.1:5000/meats", {
+    const response = await fetch(`${serverUrl}/meats`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(newMeat)
-    }).then(r => r.json()).then(setItems).then(() => setLoading(false))
+    })
+    await handleData(response)
   }
 
-  function handleDelete(name) {
-    fetch(`http://127.0.0.1:5000/meats/${name}`, {
+  async function handleDelete(name) {
+    const response = await fetch(`${serverUrl}/meats/${name}`, {
       method: 'DELETE'
-    }).then(() => setItems(items.filter(item => item.name != name)))
+    })
+    await handleData(response)
   }
 
   function handleUpdate(item) {
@@ -137,7 +151,7 @@ function InventoryPage({ onBack }) {
     setEditPrice(item.price_per_oz.toFixed(2))
   }
 
-  function handleSave() {
+  async function handleSave() {
     const duplicate = items.some(meat => meat.name.toLowerCase() == editName.toLowerCase())
     if(duplicate && editItem.name.toLowerCase() != editName.toLowerCase()) {
       return;
@@ -149,13 +163,15 @@ function InventoryPage({ onBack }) {
       meat_type: editMeatType,
       price_per_oz: parseFloat(editPrice)
     }
-    fetch(`http://127.0.0.1:5000/meats/${editItem.name}`, {
+    const response = await fetch(`${serverUrl}/meats/${editItem.name}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(editMeat)
-    }).then(() => setItems(items.map(meat => editItem.name === meat.name ? editMeat : meat))).then(() => setEditItem({})).then(() => setLoading(false))
+    })
+    await handleData(response)
+    setEditItem({})
   }
 
   return (
@@ -314,7 +330,7 @@ function InventoryPage({ onBack }) {
                     onClick={editItem.name === item.name ? () => handleSave() : () => handleUpdate(item)}
                     sx={{marginLeft: '10px'}}
                     >
-                      {editItem?.name === item.name ? 'SAVE' : 'UPDATE'}
+                      {editItem.name === item.name ? 'SAVE' : 'UPDATE'}
                     </Button>
                   </TableCell>
                 </TableRow>
