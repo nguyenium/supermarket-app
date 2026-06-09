@@ -83,12 +83,7 @@ function InventoryPage({ onBack }) {
   const [editMeatType, setEditMeatType] = useState("All")
   const [editPrice, setEditPrice] = useState("")
   // const [status,    setStatus]   = useState("All"); status isn't being used anymore since backend doesn't contain status 
-
-  async function handleData(response) {
-    const data = await response.json()
-    setItems(data)
-    setLoading(false)
-  }
+  
 
   useEffect(() => {
     // Replace with: fetch("https://your-api/api/inventory").then(r => r.json()).then(setItems)
@@ -96,7 +91,9 @@ function InventoryPage({ onBack }) {
     // return () => clearTimeout(timer);
     async function fetchData() {
       const response = await fetch(`${serverUrl}/meats`)
-      await handleData(response)
+      const data = await response.json()
+      setItems(data)
+      setLoading(false)
     }
     fetchData()
   }, []);
@@ -133,14 +130,18 @@ function InventoryPage({ onBack }) {
       },
       body: JSON.stringify(newMeat)
     })
-    await handleData(response)
+    const data = await response.json()
+    setItems(data)
+    setLoading(false)
   }
 
   async function handleDelete(name) {
     const response = await fetch(`${serverUrl}/meats/${name}`, {
       method: 'DELETE'
     })
-    await handleData(response)
+    const data = await response.json()
+    setItems(data)
+    setLoading(false)
   }
 
   function handleUpdate(item) {
@@ -170,7 +171,9 @@ function InventoryPage({ onBack }) {
       },
       body: JSON.stringify(editMeat)
     })
-    await handleData(response)
+    const data = await response.json()
+    setItems(data)
+    setLoading(false)
     setEditItem({})
   }
 
