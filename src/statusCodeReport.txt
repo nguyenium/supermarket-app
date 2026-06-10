@@ -1,0 +1,27 @@
+Definition: HTTP status codes are basically just a way for the server to communicate with the browser so both parties know what's going on. 
+Tries to give as much information to the browser as possible without doing too much work. 
+
+Status Codes
+    100 Categories (Informational)
+        Informational (not important)
+    200 Categories (Success)
+        The request made was a good request and completed successfully and did what was needed to do 
+        200: Ok, Successful and nothing in particular to say about it
+        201: Created, Used for post requests. Created some resource and was successful
+        204: No Content, Something went well and everything worked as expected but has nothing to return. Usually used with delete requests
+    300 Categories (Redirection)
+        Used to redirect user
+        Ex: If someone goes to some website and that webpage URL is redirecting them to another webpage URL, you get a 300 level status code saying that this 
+        webpage used to be here, but now it is here.
+        304: Not Modified, Basically handles caching. When calling an API, you don’t want to get the results every time due to them not changing often, but 
+        you want to query it constantly to see any changes. You send them a 304 code to say the content wasn’t modified. (Used to save bandwidth)
+    400 Categories (Client Error)
+        An error from the client side. User sent either bad information or aren’t authorized 
+        404: Not Found,  when attempting to go to a webpage that doesn’t exist.
+        400: Bad Request, Something went wrong or something happened. The information was bad. Used when you don’t know the specific reason for something being bad,
+        or the user sent bad information.
+        401: Unauthorized, The user is trying to access something that requires some form of authorization that wasn’t passed or incorrectly passed. 
+        403: Forbidden, If the client sent authorization but the service they wanted requires different permissions. 
+    500 Categories (Server Error)
+        An error from the server side. 
+        500: Internal Server Error, Something broke on the server. Could be a problem in the code and it throws an error. Usually unexpected errors due to the server. 
