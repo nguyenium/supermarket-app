@@ -136,9 +136,10 @@ function InventoryPage({ onBack }) {
   }
 
   async function handleDelete(name) {
-    const response = await fetch(`${serverUrl}/meats/${name}`, {
+    const remove = await fetch(`${serverUrl}/meats/${name}`, {
       method: 'DELETE'
     })
+    const response = await fetch(`${serverUrl}/meats`)
     const data = await response.json()
     setItems(data)
     setLoading(false)
@@ -220,7 +221,7 @@ function InventoryPage({ onBack }) {
                 label="Category"
                 onChange={e => setNewMeatType(e.target.value)}
               >
-                {CATEGORIES.map(c => <MenuItem key={c} value={c}> {c} </MenuItem> )}
+                {CATEGORIES.filter(c =>  c !== "All").map(c => <MenuItem key={c} value={c}> {c} </MenuItem> )}
               </Select>
             </FormControl>
             <TextField
